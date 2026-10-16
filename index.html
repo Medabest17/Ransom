@@ -1,0 +1,772 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090b">
+  <title>Randsom | Digital Playground</title>
+
+  <style>
+    :root {
+      --bg: #09090b;
+      --panel: #151519;
+      --panel2: #1d1d23;
+      --red: #ef233c;
+      --red-dark: #641522;
+      --text: #f5f5f5;
+      --muted: #a1a1aa;
+      --border: #303037;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding: 18px 7%;
+      background: #09090bf2;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      font-size: 27px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    .logo span, .red { color: var(--red); }
+
+    .header-tag {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    main {
+      width: min(1150px, 100%);
+      margin: auto;
+      padding: 35px 22px 65px;
+    }
+
+    .hero {
+      padding: clamp(28px, 6vw, 60px);
+      border: 1px solid #51202a;
+      border-radius: 18px;
+      background:
+        radial-gradient(ellipse at 90% 10%, #50111d 0, transparent 45%),
+        linear-gradient(135deg, #1b0b10, #111114 70%);
+      margin-bottom: 38px;
+    }
+
+    .eyebrow {
+      color: #ff6175;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      font-size: clamp(38px, 7vw, 68px);
+      line-height: 1.05;
+      margin: 15px 0;
+    }
+
+    .hero p {
+      color: #c1bac0;
+      line-height: 1.8;
+      max-width: 600px;
+    }
+
+    .hero button, .primary {
+      background: var(--red);
+      color: white;
+      border: 0;
+      border-radius: 8px;
+      padding: 13px 19px;
+      font-weight: bold;
+    }
+
+    button:hover { filter: brightness(1.15); }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 30px 0 18px;
+    }
+
+    .section-heading h2 { margin: 0; }
+
+    .section-heading small {
+      color: var(--muted);
+    }
+
+    .featured-grid, .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+      gap: 16px;
+    }
+
+    .featured-card {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, #251017, #151519 70%);
+      border: 1px solid #64202e;
+      border-radius: 13px;
+      padding: 20px;
+      min-height: 165px;
+    }
+
+    .featured-card::after {
+      content: "★";
+      position: absolute;
+      right: 12px;
+      top: 5px;
+      font-size: 65px;
+      color: #ef233c12;
+      pointer-events: none;
+    }
+
+    .featured-card h3 { margin: 12px 0 7px; }
+
+    .featured-card p, .tool-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .featured-card button {
+      color: #ff6678;
+      background: transparent;
+      border: 0;
+      padding: 7px 0;
+      font-weight: bold;
+    }
+
+    .search-wrap { position: relative; }
+
+    .search-wrap span {
+      position: absolute;
+      top: 16px;
+      left: 15px;
+      color: var(--muted);
+    }
+
+    #search {
+      width: 100%;
+      padding: 16px 16px 16px 43px;
+      background: var(--panel);
+      color: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+    }
+
+    #search:focus { border-color: var(--red); }
+
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin: 17px 0 25px;
+    }
+
+    .category-btn {
+      padding: 10px 15px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      color: #ddd;
+    }
+
+    .category-btn.active {
+      background: var(--red);
+      border-color: var(--red);
+      color: white;
+    }
+
+    .tool-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 20px;
+      min-width: 0;
+      transition: transform .2s, border-color .2s;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--red);
+    }
+
+    .tool-icon { font-size: 31px; }
+
+    .tool-card h3 { margin: 14px 0 5px; }
+
+    .tool-card p { flex: 1; }
+
+    .pill {
+      display: inline-block;
+      color: #ff8795;
+      background: #40121c;
+      padding: 5px 8px;
+      border-radius: 5px;
+      font-size: 10px;
+      font-weight: bold;
+      letter-spacing: .6px;
+      align-self: flex-start;
+    }
+
+    .open-btn {
+      width: 100%;
+      padding: 11px;
+      background: #282027;
+      border: 1px solid #51202a;
+      border-radius: 7px;
+      color: white;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .rating {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2px;
+      margin: 8px 0;
+    }
+
+    .star {
+      background: transparent;
+      border: 0;
+      color: #606068;
+      padding: 3px;
+      font-size: 20px;
+    }
+
+    .star.selected { color: #ff5368; }
+
+    .rating-number {
+      color: var(--muted);
+      font-size: 12px;
+      margin-left: 5px;
+    }
+
+    .no-results {
+      padding: 30px;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .notice {
+      margin-top: 35px;
+      padding: 16px;
+      background: #141417;
+      border-left: 3px solid var(--red);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    footer {
+      padding: 25px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      color: #777780;
+      font-size: 12px;
+    }
+
+    dialog {
+      width: min(520px, calc(100% - 28px));
+      background: #151519;
+      color: white;
+      border: 1px solid var(--red);
+      border-radius: 14px;
+      padding: 25px;
+    }
+
+    dialog::backdrop { background: #000c; }
+
+    dialog p {
+      color: #b4b4bd;
+      line-height: 1.7;
+    }
+
+    #demo-output {
+      min-height: 65px;
+      padding: 15px;
+      background: #09090b;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.7;
+      color: #ff6376;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .secondary {
+      background: #29292f;
+      color: white;
+      border: 1px solid #44444c;
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+
+    @media (max-width: 500px) {
+      header { padding: 16px; }
+      .header-tag { font-size: 9px; }
+      main { padding: 22px 15px 45px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">RAN<span>SOM</span></div>
+    <div class="header-tag">TOOLS // TRICKS // EXPERIMENTS</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">WELCOME TO RANSOM</div>
+      <h1>Break the <span class="red">ordinary.</span></h1>
+      <p>
+        Your digital playground. Discover browser tricks,
+        permitted game mods, harmless pranks, and useful tools.
+      </p>
+      <button id="explore">EXPLORE TOOLS ↓</button>
+    </section>
+
+    <section id="featured-section">
+      <div class="section-heading">
+        <h2>★ Featured</h2>
+        <small>Our handpicked tools</small>
+      </div>
+      <div class="featured-grid" id="featured-grid"></div>
+    </section>
+
+    <section id="collection">
+      <div class="section-heading">
+        <h2>Explore everything</h2>
+        <small id="result-count"></small>
+      </div>
+
+      <div class="search-wrap">
+        <span>⌕</span>
+        <input id="search" type="search"
+          placeholder="Search tools..."
+          aria-label="Search tools">
+      </div>
+
+      <div class="categories" id="categories">
+        <button class="category-btn active" data-category="All">All</button>
+        <button class="category-btn" data-category="Browser">Browser</button>
+        <button class="category-btn" data-category="Game Mods">Game Mods</button>
+        <button class="category-btn" data-category="Pranks">Pranks</button>
+        <button class="category-btn" data-category="Utilities">Utilities</button>
+        <button class="category-btn" data-category="Experiments">Experiments</button>
+      </div>
+
+      <div class="tool-grid" id="tool-grid"></div>
+      <div class="no-results" id="no-results" hidden>
+        No tools found. Try another search or category.
+      </div>
+    </section>
+
+    <div class="notice">
+      <strong class="red">RANSOM SAFETY NOTE</strong><br>
+      Tools are intended for your own browser, devices, and authorized
+      environments. Game modding should follow each game's rules.
+      Never enter real passwords into unfamiliar tools.
+    </div>
+  </main>
+
+  <footer>RANSOM © 2026 · YOUR DIGITAL PLAYGROUND</footer>
+
+  <dialog id="tool-dialog">
+    <div class="eyebrow" id="modal-category">RANSOM TOOL</div>
+    <h2 id="modal-title">Tool name</h2>
+    <p id="modal-description"></p>
+    <div id="demo-output" aria-live="polite">Ready.</div>
+    <div class="modal-actions">
+      <button class="primary" id="run-tool">Run tool</button>
+      <button class="secondary" id="close-dialog">Close</button>
+    </div>
+  </dialog>
+
+  <script>
+    // TOOL LIST
+    // Add new tools here when you want to expand Randsom.
+
+    const tools = [
+      {
+        id: "text-glitch",
+        name: "Text Glitch",
+        icon: "👾",
+        category: "Browser",
+        description: "Give your text a glitchy digital look.",
+        featured: true,
+        rating: 4.8,
+        demo: "glitch"
+      },
+      {
+        id: "password-lab",
+        name: "Password Lab",
+        icon: "🔐",
+        category: "Utilities",
+        description: "Generate a random password in your browser.",
+        featured: true,
+        rating: 4.9,
+        demo: "password"
+      },
+      {
+        id: "fake-terminal",
+        name: "Fake Terminal",
+        icon: "⌨️",
+        category: "Experiments",
+        description: "A pretend hacker terminal. No real system access.",
+        featured: true,
+        rating: 4.7,
+        demo: "terminal"
+      },
+      {
+        id: "prank-message",
+        name: "Prank Message",
+        icon: "😈",
+        category: "Pranks",
+        description: "Put a silly message on your own screen.",
+        featured: false,
+        rating: 4.5,
+        demo: "message"
+      },
+      {
+        id: "click-counter",
+        name: "Click Counter",
+        icon: "🖱️",
+        category: "Utilities",
+        description: "Test your clicking speed with a simple counter.",
+        featured: false,
+        rating: 4.4,
+        demo: "counter"
+      },
+      {
+        id: "matrix-rain",
+        name: "Matrix Generator",
+        icon: "💻",
+        category: "Experiments",
+        description: "Generate a little wall of digital-looking code.",
+        featured: false,
+        rating: 4.6,
+        demo: "matrix"
+      },
+      {
+        id: "browser-lab",
+        name: "Browser Lab",
+        icon: "🌐",
+        category: "Browser",
+        description: "Experiment with text effects and browser visuals.",
+        featured: false,
+        rating: 4.3,
+        demo: "browser"
+      },
+      {
+        id: "modding-guide",
+        name: "Game Modding Guide",
+        icon: "🎮",
+        category: "Game Mods",
+        description: "Learn the basics of legitimate game customization.",
+        featured: false,
+        rating: 4.8,
+        demo: "mods"
+      }
+    ];
+
+    const grid = document.getElementById("tool-grid");
+    const featuredGrid = document.getElementById("featured-grid");
+    const search = document.getElementById("search");
+    const dialog = document.getElementById("tool-dialog");
+    const output = document.getElementById("demo-output");
+
+    let activeCategory = "All";
+    let selectedTool = null;
+    let clickCount = 0;
+
+    // Ratings are stored only in this browser.
+    // They are NOT uploaded or shared with other visitors.
+
+    function getRatings() {
+      try {
+        return JSON.parse(localStorage.getItem("ransom-ratings") || "{}");
+      } catch {
+        return {};
+      }
+    }
+
+    function saveRating(id, rating) {
+      const ratings = getRatings();
+      ratings[id] = rating;
+
+      try {
+        localStorage.setItem("ransom-ratings", JSON.stringify(ratings));
+      } catch {
+        // The website still works if browser storage is unavailable.
+      }
+    }
+
+    function averageRating(tool) {
+      const personal = getRatings()[tool.id];
+
+      // Demo starting ratings; a real public average needs a database.
+      return personal || tool.rating;
+    }
+
+    function starsHTML(tool) {
+      const chosen = getRatings()[tool.id] || 0;
+      const value = averageRating(tool);
+
+      return `
+        <div class="rating" aria-label="Rating ${value} out of 5">
+          ${[1, 2, 3, 4, 5].map(n => `
+            <button
+              class="star ${n <= Math.round(value) ? "selected" : ""}"
+              data-rate="${n}"
+              data-id="${tool.id}"
+              aria-label="Rate ${tool.name} ${n} out of 5"
+              title="Rate ${n} out of 5"
+            >★</button>
+          `).join("")}
+          <span class="rating-number">
+            ${chosen ? chosen + "/5 · Your rating" : value.toFixed(1) + " · Demo rating"}
+          </span>
+        </div>
+      `;
+    }
+
+    function cardHTML(tool, featured = false) {
+      if (featured) {
+        return `
+          <article class="featured-card">
+            <div class="pill">★ FEATURED</div>
+            <h3>${tool.icon} ${tool.name}</h3>
+            <p>${tool.description}</p>
+            <button data-open="${tool.id}">Open tool →</button>
+          </article>
+        `;
+      }
+
+      return `
+        <article class="tool-card">
+          <div class="tool-icon">${tool.icon}</div>
+          <span class="pill">${tool.category.toUpperCase()}</span>
+          <h3>${tool.name}</h3>
+          <p>${tool.description}</p>
+          ${starsHTML(tool)}
+          <button class="open-btn" data-open="${tool.id}">
+            Open tool →
+          </button>
+        </article>
+      `;
+    }
+
+    function renderFeatured() {
+      featuredGrid.innerHTML = tools
+        .filter(tool => tool.featured)
+        .map(tool => cardHTML(tool, true))
+        .join("");
+    }
+
+    function renderTools() {
+      const query = search.value.trim().toLowerCase();
+
+      const filtered = tools.filter(tool => {
+        const matchesCategory =
+          activeCategory === "All" ||
+          tool.category === activeCategory;
+
+        const matchesSearch =
+          (tool.name + " " + tool.description + " " + tool.category)
+            .toLowerCase().includes(query);
+
+        return matchesCategory && matchesSearch;
+      });
+
+      grid.innerHTML = filtered.map(tool => cardHTML(tool)).join("");
+      document.getElementById("result-count").textContent =
+        filtered.length + (filtered.length === 1 ? " tool" : " tools");
+
+      document.getElementById("no-results").hidden =
+        filtered.length !== 0;
+    }
+
+    function render() {
+      renderFeatured();
+      renderTools();
+    }
+
+    // Category filters
+    document.getElementById("categories").addEventListener("click", event => {
+      const button = event.target.closest("[data-category]");
+      if (!button) return;
+
+      activeCategory = button.dataset.category;
+
+      document.querySelectorAll("[data-category]").forEach(item => {
+        item.classList.toggle("active", item === button);
+      });
+
+      renderTools();
+    });
+
+    // Live search
+    search.addEventListener("input", renderTools);
+
+    // Jump to the full collection
+    document.getElementById("explore").addEventListener("click", () => {
+      document.getElementById("collection").scrollIntoView({
+        behavior: "smooth"
+      });
+      search.focus({ preventScroll: true });
+    });
+
+    // Click a star to rate a tool
+    document.addEventListener("click", event => {
+      const star = event.target.closest("[data-rate]");
+      if (!star) return;
+
+      saveRating(star.dataset.id, Number(star.dataset.rate));
+      renderTools();
+    });
+
+    // Open a tool
+    document.addEventListener("click", event => {
+      const button = event.target.closest("[data-open]");
+      if (!button) return;
+
+      selectedTool = tools.find(tool => tool.id === button.dataset.open);
+      if (!selectedTool) return;
+
+      document.getElementById("modal-title").textContent =
+        selectedTool.name;
+
+      document.getElementById("modal-category").textContent =
+        selectedTool.category.toUpperCase();
+
+      document.getElementById("modal-description").textContent =
+        selectedTool.description;
+
+      output.textContent = "Ready. Click Run tool to begin.";
+      document.getElementById("run-tool").textContent = "Run tool";
+      dialog.showModal();
+    });
+
+    document.getElementById("close-dialog").addEventListener("click", () => {
+      dialog.close();
+    });
+
+    // Each demo runs locally in the visitor's browser.
+    document.getElementById("run-tool").addEventListener("click", () => {
+      if (!selectedTool) return;
+
+      switch (selectedTool.demo) {
+        case "glitch": {
+          const text = prompt("Enter some text to glitch:");
+          if (text !== null) {
+            output.textContent = text.split("").map(char =>
+              Math.random() > 0.65 ? char + "\u0336" : char
+            ).join("");
+          }
+          break;
+        }
+
+        case "password": {
+          const chars =
+            "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%";
+          const bytes = new Uint8Array(20);
+          crypto.getRandomValues(bytes);
+
+          output.textContent = Array.from(bytes, byte =>
+            chars[byte % chars.length]
+          ).join("");
+          break;
+        }
+
+        case "terminal":
+          output.textContent =
+            "> Booting Ransom terminal...\n" +
+            "> Loading pretend modules...\n" +
+            "> Checking imaginary systems...\n" +
+            "> Simulation complete. Nothing was accessed.";
+          break;
+
+        case "message": {
+          const message = prompt("Write a harmless prank message:");
+          if (message !== null) output.textContent = message;
+          break;
+        }
+
+        case "counter":
+          clickCount++;
+          output.textContent = "Total clicks: " + clickCount;
+          document.getElementById("run-tool").textContent = "Click again";
+          break;
+
+        case "matrix":
+          output.textContent = Array.from({ length: 10 }, () =>
+            Array.from({ length: 24 }, () =>
+              Math.random() > 0.5 ? "1" : "0"
+            ).join("")
+          ).join("\n");
+          break;
+
+        case "browser":
+          output.textContent =
+            "Browser Lab\n\n" +
+            "Try Text Glitch for a text effect, or use your browser's " +
+            "built-in developer tools to experiment on your own pages.";
+          break;
+
+        case "mods":
+          output.textContent =
+            "GAME MODDING BASICS\n\n" +
+            "1. Check whether the game supports mods.\n" +
+            "2. Read the game's official modding rules.\n" +
+            "3. Back up your own files before making changes.\n" +
+            "4. Use trusted sources and avoid unknown executables.\n" +
+            "5. Never use mods to disrupt other players.";
+          break;
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
