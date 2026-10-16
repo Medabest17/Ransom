@@ -428,6 +428,18 @@
     // Add new tools here when you want to expand Randsom.
 
     const tools = [
+      
+    {
+      id: "auto-clicker",
+      name: "Auto Clicker",
+      icon: "🖱️",
+      category: "Utilities",
+      description: "An adjustable auto clicker with custom hotkeys.",
+      featured: true,
+      rating: 4.9,
+      demo: "autoclicker"
+      },
+
       {
         id: "text-glitch",
         name: "Text Glitch",
@@ -695,6 +707,27 @@
     // Each demo runs locally in the visitor's browser.
     document.getElementById("run-tool").addEventListener("click", () => {
       if (!selectedTool) return;
+
+      
+<div id="autoclicker-panel" hidden>
+  <label for="cps">Click speed: <span id="cps-value">10</span> CPS</label>
+  <input id="cps" type="range" min="1" max="100" value="10">
+
+  <p>Start hotkey: <button class="secondary" id="start-key">F6</button></p>
+  <p>Stop hotkey: <button class="secondary" id="stop-key">F7</button></p>
+  <p id="hotkey-status">Default keys: F6 to start, F7 to stop.</p>
+
+  <div class="modal-actions">
+    <button class="primary" id="ac-start">Start</button>
+    <button class="secondary" id="ac-stop">Stop</button>
+  </div>
+
+      <p>Test target — clicks stay inside this panel:</p>
+      <button id="ac-target" class="primary">Click me!</button>
+      <p>Auto clicks: <strong id="ac-count">0</strong></p>
+      <p id="ac-status" role="status">Stopped</p>
+    </div>
+
 
       switch (selectedTool.demo) {
         case "glitch": {
